@@ -1,7 +1,7 @@
 ---
 menu:
   after:
-    name: blog
+    name: 技术分享
     weight: 5
-title: Blog
+title: 技术分享
 ---
