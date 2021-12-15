@@ -61,4 +61,4 @@ Mandatory arguments to long options are mandatory for short options too.
     - /keyword 打开文本，向下查找匹配keyword的位置
     - ?keyword 打开文本，向上查找匹配keyword的位置
 4. less 常见快捷键
-![](assets\2021-12-15-23-03-11.png)
+![](assets/2021-12-15-23-03-11.png)
