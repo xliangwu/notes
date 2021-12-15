@@ -13,4 +13,5 @@
 
 # 内容
 ## 30天学习Linux Shell编程
-* DAY1 学习常见的查看文本命令
+1. [Day01-学习常见的查看文本命令](content\posts\linux-01.md)
+2. [DAY02-查找文本命令](content\posts\linux-02.md)
