@@ -1,5 +1,5 @@
 +++
-title = "常见的查看文本命令"
+title = "Linux-Grep命令"
 description = ""
 tags = [
     "shell",
@@ -10,55 +10,69 @@ categories = [
 ]
 +++
 ## 背景
-我们要查看一些文本文件的内容时，要使用文本编辑器来查看。在Linux下，可以使用一些命令预览文本文件中的内容，而不必使用文本编辑器打开查看。这篇笔记分享几个常用的文本查看命令。
+Linux系统中grep命令是一种强大的文本搜索工具，它能使用正则表达式搜索文本，并把匹 配的行打印出来。grep全称是Global Regular Expression Print，表示全局正则表达式版本，它的使用权限是所有用户。
 
 ## 命令
-- cat：从第一行开始显示文本内容（适用于内容较少的）
-- tac：从最后一行开始显示，是 cat 的逆顺序
-- more：一页一页的显示文本内容（适用于内容较多的）
-- less：与 more 类似，但是比 more 更好的是，它可以往前翻页！
-- head：只看文本的前面几行
-- tail：只看文本的后面几行
-- nl：显示文本内容与行号
-
-more和less功能相似，more只允许往后查看文本内容，less 正向和反向都可以。
-
-## 例子
-1. 查看全部文件内容
 ```shell
-xw80329@dev001:/tmp$ cat sync.out
- [INFO] sync data from github
- [INFO] hugo buiild static web sites
+grep [options]
+
+主要参数
+[options]主要参数：
+－c：只输出匹配行的计数。
+－I：不区分大 小写(只适用于单字符)。
+－h：查询多文件时不显示文件名。
+－l：查询多文件时只输出包含匹配字符的文件名。
+－n：显示匹配行及 行号。
+－s：不显示不存在或无匹配文本的错误信息。
+－v：显示不包含匹配文本的所有行。
+pattern正则表达式主要参数：
+\： 忽略正则表达式中特殊字符的原有含义。
+^：匹配正则表达式的开始行。
+$: 匹配正则表达式的结束行。
+\<：从匹配正则表达 式的行开始。
+\>：到匹配正则表达式的行结束。
+[ ]：单个字符，如[A]即A符合要求 。
+[ - ]：范围，如[A-Z]，即A、B、C一直到Z都符合要求 。
+。：所有的单个字符。
+* ：有字符，长度可以为0。
 ```
-2. 查看命令的help，快速了解命令支持的参数
+
+## 简单实例
+
 ```shell
-man nl
-nl --help
-xw80329@dev001:/tmp$ nl --help
-Usage: nl [OPTION]... [FILE]...
-Write each FILE to standard output, with line numbers added.
-
-With no FILE, or when FILE is -, read standard input.
-
-Mandatory arguments to long options are mandatory for short options too.
-  -b, --body-numbering=STYLE      use STYLE for numbering body lines
-  -d, --section-delimiter=CC      use CC for logical page delimiters
-  -f, --footer-numbering=STYLE    use STYLE for numbering footer lines
-  -h, --header-numbering=STYLE    use STYLE for numbering header lines
-  -i, --line-increment=NUMBER     line number increment at each line
-  -l, --join-blank-lines=NUMBER   group of NUMBER empty lines counted as one
-  -n, --number-format=FORMAT      insert line numbers according to FORMAT
-  -p, --no-renumber               do not reset line numbers for each section
-  -s, --number-separator=STRING   add STRING after (possible) line number
-  -v, --starting-line-number=NUMBER  first line number for each section
-  -w, --number-width=NUMBER       use NUMBER columns for line numbers
-      --help     display this help and exit
-      --version  output version information and exit
+$ grep ‘test’ d*
+显示所有以d开头的文件中包含 test的行。
+$ grep ‘test’ aa bb cc
+显示在aa，bb，cc文件中匹配test的行。
+$ grep ‘[a-z]\{5\}’ aa
+显示所有包含每个字符串至少有5个连续小写字符的字符串的行。
+$ grep ‘w\(es\)t.*\1′ aa
+如果west被匹配，则es就被存储到内存中，并标记为1，然后搜索任意个字符(.*)，这些字符后面紧跟着 另外一个es(\1)，找到就显示该行。如果用egrep或grep -E，就不用”\”号进行转义，直接写成’w(es)t.*\1′就可以了。
 ```
-3. less 查看文件
-    - less -N fileName 显示文件的行数
-    - less -X fileName 退出less命令的时候，不要清空刚刚显示在屏幕的内容
-    - /keyword 打开文本，向下查找匹配keyword的位置
-    - ?keyword 打开文本，向上查找匹配keyword的位置
-4. less 常见快捷键
-![](assets/2021-12-15-23-03-11.png)
+
+## 复杂实例.
+>利用正则表达式，可以快速查找自定义格式的文本，目前支持的语法格式有：
+- ^         锚定行的开始 如：'^grep'匹配所有以grep开头的行。    
+- $         锚定行的结束 如：'grep$'匹配所有以grep结尾的行。    
+- .         匹配一个非换行符的字符 如：'gr.p'匹配gr后接一个任意字符，然后是p。    
+- \*         匹配零个或多个先前字符 如：'*grep'匹配所有一个或多个空格后紧跟grep的行。    
+- .*        一起用代表任意字符。   
+- []        匹配一个指定范围内的字符，如'[Gg]rep'匹配Grep和grep。    
+- [^]       匹配一个不在指定范围内的字符，如：'[^A-FH-Z]rep'匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。    
+- \(..\)    标记匹配字符，如'\(love\)'，love被标记为1。    
+- \<        锚定单词的开始，如:'\<grep'匹配包含以grep开头的单词的行。    
+- \>        锚定单词的结束，如'grep\>'匹配包含以grep结尾的单词的行。    
+- x\{m\}    重复字符x，m次，如：'0\{5\}'匹配包含5个o的行。    
+- x\{m,\}   重复字符x,至少m次，如：'o\{5,\}'匹配至少有5个o的行。    
+- x\{m,n\}  重复字符x，至少m次，不多于n次，如：'o\{5,10\}'匹配5--10个o的行。   
+- \w        匹配文字和数字字符，也就是[A-Za-z0-9]，如：'G\w*p'匹配以G后跟零个或多个文字或数字字符，然后是p。   
+- \W        \w的反置形式，匹配一个或多个非单词字符，如点号句号等。   
+- \b        单词锁定符，如: '\bgrep\b'只匹配grep。
+
+显示当前目录下面以.txt 结尾的文件中的所有包含每个字符串至少有7个连续小写字符的字符串的行
+```shell
+[root@localhost test]# grep '[a-z]\{7\}' *.txt
+test.txt:hnlinux
+test.txt:peida.cnblogs.com
+test.txt:linuxmint
+```
