@@ -15,3 +15,4 @@
 ## 30天学习Linux Shell编程
 1. [Day01-学习常见的查看文本命令](content/posts/linux-01.md)
 2. [Day02-查找文本命令](content/posts/linux-02.md)
+3. [Day03-sed命令](content/posts/linux-03.md)
